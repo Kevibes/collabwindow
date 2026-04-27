@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  turbopack: {
+    root: "/home/kevin/Projects/Making Money/time-zone-meeting-planner",
+  },
 };
 
 export default nextConfig;

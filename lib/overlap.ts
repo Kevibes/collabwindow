@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
-import { format } from "date-fns";
 
 export interface OverlapSlot {
   hour: number;
@@ -35,11 +34,17 @@ export function formatHour24(hour: number): string {
 }
 
 function getOffsetMinutes(date: Date, timeZone: string): number {
-  const iso = formatInTimeZone(date, timeZone, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  const offsetStr = iso.slice(-6);
-  const sign = offsetStr[0] === "+" ? 1 : -1;
-  const hours = parseInt(offsetStr.slice(1, 3), 10);
-  const mins = parseInt(offsetStr.slice(4, 6), 10);
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "longOffset",
+  });
+  const parts = formatter.formatToParts(date);
+  const offsetPart = parts.find((p) => p.type === "timeZoneName")?.value || "";
+  const match = offsetPart.match(/(?:GMT|UTC)?([+-]\d{1,2}):(\d{2})/);
+  if (!match) return 0;
+  const sign = match[1][0] === "+" ? 1 : -1;
+  const hours = parseInt(match[1].slice(1), 10);
+  const mins = parseInt(match[2], 10);
   return sign * (hours * 60 + mins);
 }
 
@@ -48,9 +53,10 @@ export function getLocalHourLabel(
   timeZone: string,
   hour: number
 ): string {
-  const dateStr = format(date, "yyyy-MM-dd");
-  const timeInZone = `${dateStr}T${hour.toString().padStart(2, "0")}:00:00`;
-  const utcDate = fromZonedTime(timeInZone, timeZone);
+  const dateStr = formatInTimeZone(date, timeZone, "yyyy-MM-dd");
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const localDate = new Date(Date.UTC(year, month - 1, day, hour, 0, 0));
+  const utcDate = fromZonedTime(localDate, timeZone);
 
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -86,16 +92,16 @@ export function calculateOverlap(
   endWorkB: number
 ): { slots: OverlapSlot[]; windows: OverlapWindow[] } {
   const slots: OverlapSlot[] = [];
-  const dateStr = format(date, "yyyy-MM-dd");
+  const dateStr = formatInTimeZone(date, timeZoneA, "yyyy-MM-dd");
+  const [year, month, day] = dateStr.split("-").map(Number);
 
   for (let hourA = 0; hourA < 24; hourA++) {
-    const timeInA = `${dateStr}T${hourA.toString().padStart(2, "0")}:00:00`;
-    const utcDate = fromZonedTime(timeInA, timeZoneA);
+    const localDate = new Date(Date.UTC(year, month - 1, day, hourA, 0, 0));
+    const utcDate = fromZonedTime(localDate, timeZoneA);
 
-    const hourInB = parseInt(
-      formatInTimeZone(utcDate, timeZoneB, "H"),
-      10
-    );
+    const hourMinuteB = formatInTimeZone(utcDate, timeZoneB, "H:mm");
+    const [hourB, minuteB] = hourMinuteB.split(":").map(Number);
+    const hourInB = hourB + minuteB / 60;
 
     const inA = hourA >= startWorkA && hourA < endWorkA;
     const inB = hourInB >= startWorkB && hourInB < endWorkB;
@@ -116,8 +122,8 @@ export function calculateOverlap(
       inA,
       inB,
       comfort,
-      labelA: formatHour(hourA),
-      labelB: formatHour(hourInB),
+      labelA: formatInTimeZone(utcDate, timeZoneA, "h:mm a"),
+      labelB: formatInTimeZone(utcDate, timeZoneB, "h:mm a"),
     });
   }
 
@@ -160,11 +166,28 @@ export function calculateOverlap(
 
   for (const win of windows) {
     const startSlot = slots.find((s) => s.hour === win.startHour);
-    const endSlot = slots.find((s) => s.hour === win.endHour - 1);
-    if (startSlot && endSlot) {
-      win.displayA = `${startSlot.labelA} – ${endSlot.labelA}`;
-      win.displayB = `${startSlot.labelB} – ${endSlot.labelB}`;
-    }
+    if (!startSlot) continue;
+
+    const isNextDay = win.endHour >= 24;
+    const actualEndHour = win.endHour % 24;
+    const endDay = day + (isNextDay ? 1 : 0);
+
+    const startLocalDate = new Date(
+      Date.UTC(year, month - 1, day, win.startHour, 0, 0)
+    );
+    const startUtcDate = fromZonedTime(startLocalDate, timeZoneA);
+    const startLabelA = formatInTimeZone(startUtcDate, timeZoneA, "h:mm a");
+    const startLabelB = formatInTimeZone(startUtcDate, timeZoneB, "h:mm a");
+
+    const endLocalDate = new Date(
+      Date.UTC(year, month - 1, endDay, actualEndHour, 0, 0)
+    );
+    const endUtcDate = fromZonedTime(endLocalDate, timeZoneA);
+    const endLabelA = formatInTimeZone(endUtcDate, timeZoneA, "h:mm a");
+    const endLabelB = formatInTimeZone(endUtcDate, timeZoneB, "h:mm a");
+
+    win.displayA = `${startLabelA} – ${endLabelA}`;
+    win.displayB = `${startLabelB} – ${endLabelB}`;
   }
 
   return { slots, windows };

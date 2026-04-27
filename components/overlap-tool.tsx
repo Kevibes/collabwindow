@@ -29,6 +29,7 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
+import { formatInTimeZone } from "date-fns-tz";
 import {
   timeZones,
   regions,
@@ -74,11 +75,18 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
   const [endWorkB, setEndWorkB] = useState(
     parseInt(searchParams.get("eb") || "17", 10)
   );
-  const [date, setDate] = useState(
-    searchParams.get("d")
-      ? new Date(searchParams.get("d")!)
-      : new Date()
-  );
+  const [date, setDate] = useState(() => {
+    const urlDate = searchParams.get("d");
+    if (urlDate) {
+      const [year, month, day] = urlDate.split("-").map(Number);
+      return new Date(Date.UTC(year, month - 1, day));
+    }
+    // Default to "today" in timeZoneA's timezone
+    const tzA = searchParams.get("a") || defaultA || "America/New_York";
+    const todayInTz = formatInTimeZone(new Date(), tzA, "yyyy-MM-dd");
+    const [year, month, day] = todayInTz.split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, day));
+  });
   const [meetingLength, setMeetingLength] = useState(
     parseInt(searchParams.get("len") || "60", 10)
   );
@@ -115,7 +123,8 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
     updateUrl({ b: val });
   };
   const handleDateChange = (val: string) => {
-    const d = new Date(val);
+    const [year, month, day] = val.split("-").map(Number);
+    const d = new Date(Date.UTC(year, month - 1, day));
     setDate(d);
     updateUrl({ d: val });
   };
@@ -146,7 +155,7 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
 
   const bestWindow = viableWindows.find((w) => w.comfort === "good") || viableWindows[0];
 
-  const dateStr = date.toISOString().split("T")[0];
+  const dateStr = formatInTimeZone(date, timeZoneA, "yyyy-MM-dd");
 
   const copyLink = async () => {
     const params = new URLSearchParams();
@@ -543,13 +552,15 @@ function QuickReferenceTable({
   meetingLength: number;
 }) {
   const days = useMemo(() => {
-    const today = new Date();
+    const todayInTz = formatInTimeZone(new Date(), timeZoneA, "yyyy-MM-dd");
+    const [year, month, day] = todayInTz.split("-").map(Number);
+    const today = new Date(Date.UTC(year, month - 1, day));
     return Array.from({ length: 7 }, (_, i) => {
       const d = new Date(today);
-      d.setDate(d.getDate() + i);
+      d.setUTCDate(d.getUTCDate() + i);
       return d;
     });
-  }, []);
+  }, [timeZoneA]);
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 

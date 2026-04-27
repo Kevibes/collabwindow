@@ -40,19 +40,31 @@ export function OverlapBar({ slots, labelA, labelB }: OverlapBarProps) {
         </div>
       </div>
 
-      {/* Hour labels */}
-      <div className="flex mb-1">
-        {slots.map((slot) =>
-          slot.hour % 3 === 0 ? (
+      {/* Hour labels + ticks */}
+      <div className="relative mb-1">
+        <div className="flex">
+          {slots.map((slot) =>
+            slot.hour % 3 === 0 ? (
+              <div
+                key={`label-${slot.hour}`}
+                className="text-[10px] text-muted-foreground"
+                style={{ flexBasis: `${cellWidth * 3}%`, paddingLeft: 2 }}
+              >
+                {slot.labelA}
+              </div>
+            ) : null
+          )}
+        </div>
+        {/* Tick marks aligned to hour boundaries */}
+        <div className="flex h-1 mt-0.5">
+          {slots.map((slot) => (
             <div
-              key={`label-${slot.hour}`}
-              className="text-[10px] text-muted-foreground text-center"
-              style={{ flexBasis: `${cellWidth * 3}%` }}
-            >
-              {slot.labelA}
-            </div>
-          ) : null
-        )}
+              key={`tick-${slot.hour}`}
+              className={`border-r ${slot.hour % 3 === 0 ? 'border-muted-foreground/40' : 'border-transparent'}`}
+              style={{ flexBasis: `${cellWidth}%` }}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Zone B bar */}
