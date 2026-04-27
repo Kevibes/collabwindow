@@ -1,8 +1,8 @@
 # Time Zone Meeting Planner — Implementation Plan (v2)
 
-## Current Build Status (2026-04-27)
+## Current Build Status (2026-04-28)
 
-**Phase:** 1 (Foundation) — Code written, build passes, **bug found in overlap calculation**
+**Phase:** 1 (Foundation) — **COMPLETE**
 
 **Completed:**
 - Next.js 15 + Tailwind + shadcn/ui project initialized
@@ -11,15 +11,28 @@
 - Core overlap tool: time zone selectors, working hours sliders, date picker, meeting length filter, visual overlap bar, shareable URLs, DST warnings, quick reference table
 - Dev server running at `localhost:3000`
 
-**Known Bug:**
-Overlap calculation in `lib/overlap.ts` is incorrect. When selecting LA → Berlin, shows ~1h diff instead of ~9h. Root cause: `calculateOverlap` parses date strings in browser local time instead of using timezone-aware conversion (e.g., `date-fns-tz`).
+**Bugs Fixed (2026-04-27):**
+- ✅ **Overlap calculation bug in `lib/overlap.ts`**: Fixed `calculateOverlap` to use `date-fns-tz` for timezone-aware conversion. It now correctly handles all pairs, including LA → Berlin.
+- ✅ **US-India overlap bar mismatch**: Fixed the 30-minute timezone offset bug causing the overlap bar to display the wrong time for Zone A.
 
-**Next Steps on Resume:**
-1. Fix overlap calculation bug in `lib/overlap.ts`
-2. Add remaining 9 pair pages
-3. Add blog/supporting content
-4. Vercel deploy + domain registration
-5. Google AdSense application
+**Code Status:**
+- All changes committed and pushed to `origin/main`.
+- GitHub repo: `Kevibes/collabwindow`.
+
+**Next Steps for Tomorrow:**
+1.  **Build remaining pair pages:**
+    - `/us-uk-meeting-planner`
+    - `/us-germany-meeting-planner`
+    - `/us-philippines-meeting-planner`
+    - `/uk-india-meeting-planner`
+    - `/us-brazil-meeting-planner`
+    - `/us-japan-meeting-planner`
+    - `/uk-singapore-meeting-planner`
+    - `/us-australia-meeting-planner`
+    - `/uk-australia-meeting-planner`
+2.  **Add blog/supporting content:** Write or integrate the 4 blog posts (Complete Guide, US-India Etiquette, DST Changes, Best Tools).
+3.  **Prepare for Vercel deploy + domain registration.**
+4.  **Google AdSense application.**
 
 ---
 
