@@ -18,9 +18,9 @@ export default function CompleteGuidePage() {
         headline: "The Complete Guide to Scheduling Meetings Across Time Zones",
         datePublished: "2026-04-27",
         dateModified: "2026-04-27",
-        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
-        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
-        url: "https://collabwindow.app/blog/complete-guide-scheduling-meetings-across-time-zones",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://www.collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://www.collabwindow.app" },
+        url: "https://www.collabwindow.app/blog/complete-guide-scheduling-meetings-across-time-zones",
       }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">

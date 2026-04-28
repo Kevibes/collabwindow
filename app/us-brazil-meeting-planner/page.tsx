@@ -17,7 +17,7 @@ export default function UsBrazilPage() {
       navLabel="US–Brazil"
       jsonLdName="CollabWindow — US–Brazil Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for US and Brazil distributed teams."
-      jsonLdUrl="https://collabwindow.app/us-brazil-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/us-brazil-meeting-planner"
       gapDescription="1–4 hour gap"
       article={
         <>

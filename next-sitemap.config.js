@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://collabwindow.app",
+  siteUrl: "https://www.collabwindow.app",
   generateRobotsTxt: true,
   changefreq: "weekly",
   priority: 0.7,

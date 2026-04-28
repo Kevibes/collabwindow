@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://collabwindow.app
+Host: https://www.collabwindow.app
 
 # Sitemaps
-Sitemap: https://collabwindow.app/sitemap.xml
+Sitemap: https://www.collabwindow.app/sitemap.xml

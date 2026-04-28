@@ -17,7 +17,7 @@ export default function UsJapanPage() {
       navLabel="US–Japan"
       jsonLdName="CollabWindow — US–Japan Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for US and Japan distributed teams."
-      jsonLdUrl="https://collabwindow.app/us-japan-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/us-japan-meeting-planner"
       gapDescription="13–17 hour gap"
       article={
         <>

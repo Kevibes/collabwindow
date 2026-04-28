@@ -17,7 +17,7 @@ export default function UsGermanyPage() {
       navLabel="US–Germany"
       jsonLdName="CollabWindow — US–Germany Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for US and Germany distributed teams."
-      jsonLdUrl="https://collabwindow.app/us-germany-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/us-germany-meeting-planner"
       gapDescription="6–9 hour gap"
       article={
         <>

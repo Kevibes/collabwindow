@@ -17,7 +17,7 @@ export default function UkSingaporePage() {
       navLabel="UK–Singapore"
       jsonLdName="CollabWindow — UK–Singapore Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for UK and Singapore distributed teams."
-      jsonLdUrl="https://collabwindow.app/uk-singapore-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/uk-singapore-meeting-planner"
       gapDescription="7–8 hour gap"
       article={
         <>

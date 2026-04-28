@@ -17,9 +17,9 @@ export default function DstGuidePage() {
         headline: "How to Handle DST Changes for Global Teams",
         datePublished: "2026-04-27",
         dateModified: "2026-04-27",
-        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
-        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
-        url: "https://collabwindow.app/blog/how-to-handle-dst-changes-global-teams",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://www.collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://www.collabwindow.app" },
+        url: "https://www.collabwindow.app/blog/how-to-handle-dst-changes-global-teams",
       }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">

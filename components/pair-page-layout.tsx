@@ -48,7 +48,7 @@ export function PairPageLayout({
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: "CollabWindow", item: "https://collabwindow.app" },
+              { "@type": "ListItem", position: 1, name: "CollabWindow", item: "https://www.collabwindow.app" },
               { "@type": "ListItem", position: 2, name: navLabel, item: jsonLdUrl },
             ],
           },

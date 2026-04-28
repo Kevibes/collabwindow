@@ -17,7 +17,7 @@ export default function UsAustraliaPage() {
       navLabel="US–Australia"
       jsonLdName="CollabWindow — US–Australia Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for US and Australia distributed teams."
-      jsonLdUrl="https://collabwindow.app/us-australia-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/us-australia-meeting-planner"
       gapDescription="14–19 hour gap"
       article={
         <>

@@ -17,7 +17,7 @@ export default function UkIndiaPage() {
       navLabel="UK–India"
       jsonLdName="CollabWindow — UK–India Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for UK and India distributed teams."
-      jsonLdUrl="https://collabwindow.app/uk-india-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/uk-india-meeting-planner"
       gapDescription="4.5–5.5 hour gap"
       article={
         <>

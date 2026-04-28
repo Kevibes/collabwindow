@@ -17,7 +17,7 @@ export default function UsPhilippinesPage() {
       navLabel="US–Philippines"
       jsonLdName="CollabWindow — US–Philippines Time Zone Overlap Planner"
       jsonLdDescription="Free time zone overlap planner for US and Philippines distributed teams."
-      jsonLdUrl="https://collabwindow.app/us-philippines-meeting-planner"
+      jsonLdUrl="https://www.collabwindow.app/us-philippines-meeting-planner"
       gapDescription="12–16 hour gap"
       article={
         <>
