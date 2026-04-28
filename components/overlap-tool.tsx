@@ -505,6 +505,37 @@ function QuickReferenceTable({
 
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  const rows = useMemo(
+    () =>
+      days.map((day) => {
+        const { windows } = calculateOverlap(
+          day,
+          timeZoneA,
+          timeZoneB,
+          startWorkA,
+          endWorkA,
+          startWorkB,
+          endWorkB
+        );
+        const viable = windows.filter(
+          (w) => w.durationHours * 60 >= meetingLength
+        );
+        const best =
+          viable.find((w) => w.comfort === "good") || viable[0];
+        return { day, best };
+      }),
+    [
+      days,
+      timeZoneA,
+      timeZoneB,
+      startWorkA,
+      endWorkA,
+      startWorkB,
+      endWorkB,
+      meetingLength,
+    ]
+  );
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -522,67 +553,45 @@ function QuickReferenceTable({
           </tr>
         </thead>
         <tbody>
-          {days.map((day, i) => {
-            const { windows } = calculateOverlap(
-              day,
-              timeZoneA,
-              timeZoneB,
-              startWorkA,
-              endWorkA,
-              startWorkB,
-              endWorkB
-            );
-            const viable = windows.filter(
-              (w) => w.durationHours * 60 >= meetingLength
-            );
-            const best =
-              viable.find((w) => w.comfort === "good") || viable[0];
-
-            return (
-              <tr key={i} className="border-b last:border-b-0">
-                <td className="py-3 pr-4">
-                  <span className="font-medium">
-                    {dayNames[day.getDay()]}
-                  </span>
-                  <span className="text-muted-foreground ml-2">
-                    {day.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-                </td>
-                <td className="py-3 pr-4">
-                  {best ? (
-                    <span>{best.displayA}</span>
-                  ) : (
-                    <span className="text-muted-foreground">No overlap</span>
-                  )}
-                </td>
-                <td className="py-3">
-                  {best ? (
-                    <Badge
-                      variant="outline"
-                      className={
-                        best.comfort === "good"
-                          ? "border-emerald-500 text-emerald-700 dark:text-emerald-300"
-                          : best.comfort === "borderline"
-                          ? "border-amber-500 text-amber-700 dark:text-amber-300"
-                          : "border-rose-500 text-rose-700 dark:text-rose-300"
-                      }
-                    >
-                      {best.comfort === "good"
-                        ? "Great"
+          {rows.map(({ day, best }, i) => (
+            <tr key={i} className="border-b last:border-b-0">
+              <td className="py-3 pr-4">
+                <span className="font-medium">{dayNames[day.getDay()]}</span>
+                <span className="text-muted-foreground ml-2">
+                  {formatInTimeZone(day, timeZoneA, "MMM d")}
+                </span>
+              </td>
+              <td className="py-3 pr-4">
+                {best ? (
+                  <span>{best.displayA}</span>
+                ) : (
+                  <span className="text-muted-foreground">No overlap</span>
+                )}
+              </td>
+              <td className="py-3">
+                {best ? (
+                  <Badge
+                    variant="outline"
+                    className={
+                      best.comfort === "good"
+                        ? "border-emerald-500 text-emerald-700 dark:text-emerald-300"
                         : best.comfort === "borderline"
-                        ? "OK"
-                        : "Tight"}
-                    </Badge>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-              </tr>
-            );
-          })}
+                        ? "border-amber-500 text-amber-700 dark:text-amber-300"
+                        : "border-rose-500 text-rose-700 dark:text-rose-300"
+                    }
+                  >
+                    {best.comfort === "good"
+                      ? "Great"
+                      : best.comfort === "borderline"
+                      ? "OK"
+                      : "Tight"}
+                  </Badge>
+                ) : (
+                  "—"
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
