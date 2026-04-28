@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: "Can I add a third time zone?",
-    a: "Yes — click 'Add a third time zone' inside the tool to compare three schedules at once.",
+    a: "Not yet — we are working on it. For now, you can open two tabs with different pairs and compare manually.",
   },
   {
     q: "Which countries do you support?",

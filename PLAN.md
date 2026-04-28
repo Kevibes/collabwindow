@@ -3,36 +3,47 @@
 ## Current Build Status (2026-04-28)
 
 **Phase:** 1 (Foundation) — **COMPLETE**
+**Phase:** 2 (Content + Expansion) — **COMPLETE**
+**Phase:** 3 (Pair Expansion + Promotion Prep) — **COMPLETE**
 
-**Completed:**
+**Completed (2026-04-27 / 2026-04-28):**
 - Next.js 15 + Tailwind + shadcn/ui project initialized
 - Homepage (`/`) with generic tool, 10-pair grid, features, FAQ
-- US-India pair page (`/us-india-meeting-planner`) with pre-filled defaults + supporting content
-- Core overlap tool: time zone selectors, working hours sliders, date picker, meeting length filter, visual overlap bar, shareable URLs, DST warnings, quick reference table
-- Dev server running at `localhost:3000`
+- All 10 pair pages built with unique content per pair
+- 4 blog posts published
+- Core overlap tool with timezone selectors, sliders, date picker, meeting length filter, visual overlap bar, shareable URLs, DST warnings, quick reference table
+- **Calendar export buttons** (Google Calendar, Outlook, Apple .ics, Teams, Zoom, Slack)
+- AdSense slots, JSON-LD schema, sitemap
+- **Deployed to Vercel:** `https://collabwindow.vercel.app`
+- Domain `collabwindow.app` registered via Cloudflare
 
-**Bugs Fixed (2026-04-27):**
+**Bugs Fixed (2026-04-27 / 2026-04-28):**
 - ✅ **Overlap calculation bug in `lib/overlap.ts`**: Fixed `calculateOverlap` to use `date-fns-tz` for timezone-aware conversion. It now correctly handles all pairs, including LA → Berlin.
 - ✅ **US-India overlap bar mismatch**: Fixed the 30-minute timezone offset bug causing the overlap bar to display the wrong time for Zone A.
+- ✅ **fromZonedTime Date object bug**: Passing `Date` objects to `fromZonedTime` caused a +1h shift in overlap bar labels. Fixed by using plain `"YYYY-MM-DDTHH:mm:ss"` strings instead.
 
 **Code Status:**
 - All changes committed and pushed to `origin/main`.
 - GitHub repo: `Kevibes/collabwindow`.
+- Auto-deploy via Vercel ↔ GitHub integration is live.
 
-**Next Steps for Tomorrow:**
-1.  **Build remaining pair pages:**
-    - `/us-uk-meeting-planner`
-    - `/us-germany-meeting-planner`
-    - `/us-philippines-meeting-planner`
-    - `/uk-india-meeting-planner`
-    - `/us-brazil-meeting-planner`
-    - `/us-japan-meeting-planner`
-    - `/uk-singapore-meeting-planner`
-    - `/us-australia-meeting-planner`
-    - `/uk-australia-meeting-planner`
-2.  **Add blog/supporting content:** Write or integrate the 4 blog posts (Complete Guide, US-India Etiquette, DST Changes, Best Tools).
-3.  **Prepare for Vercel deploy + domain registration.**
-4.  **Google AdSense application.**
+**Bugs Fixed (2026-04-28 session):**
+- ✅ **Removed broken third timezone feature** (`overlap-tool.tsx`)
+- ✅ **Created `/about`, `/contact`, `/privacy` stub pages**
+- ✅ **Gated AdSense script behind env var** (`NEXT_PUBLIC_ADSENSE_ID`)
+- ✅ **Split `overlap.ts`** into pure utils (`lib/overlap.ts`) + client hook (`lib/use-overlap.ts`)
+- ✅ **Fixed window comfort logic** (window gets worst slot, not best)
+- ✅ **Memoized `QuickReferenceTable` calculations** (was 7 unmemoized `calculateOverlap` calls per render)
+- ✅ **Fixed date display to be timezone-aware** (uses `formatInTimeZone` instead of `toLocaleDateString`)
+- ✅ **Extracted shared `PairPageLayout` component** (eliminated ~1,470 lines of duplicated boilerplate across 10 pair pages)
+
+**Next Session (Priority):**
+Ready for custom domain deployment. Remaining items are promotion and content:
+1.  Deploy `collabwindow.app` custom domain on Vercel
+2.  Apply for Google AdSense (requires `NEXT_PUBLIC_ADSENSE_ID` env var)
+3.  Product Hunt launch preparation
+4.  Reddit/LinkedIn promotion
+5.  Monitor Search Console for ranking keywords
 
 ---
 
