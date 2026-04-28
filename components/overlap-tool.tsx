@@ -33,12 +33,12 @@ import {
   getTimeZoneOption,
 } from "@/lib/timezones";
 import {
-  useOverlap,
   isDstTransitionNearby,
   formatHour,
   calculateOverlap,
   getCurrentOffsetLabel,
 } from "@/lib/overlap";
+import { useOverlap } from "@/lib/use-overlap";
 import { OverlapBar } from "./overlap-bar";
 import { ExportButtons } from "./export-buttons";
 

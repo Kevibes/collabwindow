@@ -1,6 +1,3 @@
-"use client";
-
-import { useMemo } from "react";
 import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
 
 export interface OverlapSlot {
@@ -222,26 +219,3 @@ export function getCurrentOffsetLabel(date: Date, timeZone: string): string {
   return offsetPart?.value || "";
 }
 
-export function useOverlap(
-  date: Date,
-  timeZoneA: string,
-  timeZoneB: string,
-  startWorkA: number,
-  endWorkA: number,
-  startWorkB: number,
-  endWorkB: number
-) {
-  return useMemo(
-    () =>
-      calculateOverlap(
-        date,
-        timeZoneA,
-        timeZoneB,
-        startWorkA,
-        endWorkA,
-        startWorkB,
-        endWorkB
-      ),
-    [date, timeZoneA, timeZoneB, startWorkA, endWorkA, startWorkB, endWorkB]
-  );
-}
