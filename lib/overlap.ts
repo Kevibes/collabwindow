@@ -69,6 +69,10 @@ export function getComfortLevel(
 ): "good" | "borderline" | "bad" {
   if (hourInZone < startWork || hourInZone >= endWork) return "bad";
 
+  // These thresholds represent *comfortable* overlap hours (9 AM – 6 PM),
+  // independent of the user's explicit working-hour boundaries.
+  // A user may set 7 AM – 3 PM, but 7–9 AM is still considered borderline
+  // because most people prefer meetings after 9 AM.
   const earlyThreshold = 9;
   const lateThreshold = 18;
 

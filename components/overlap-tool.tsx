@@ -170,7 +170,9 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Update URL on initial load if defaults differ from URL
+  // Update URL on initial load if defaults differ from URL.
+  // Intentionally runs once on mount to avoid overwriting user edits.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!searchParams.has("a") && defaultA) updateUrl({ a: defaultA });
     if (!searchParams.has("b") && defaultB) updateUrl({ b: defaultB });

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { OverlapTool } from "@/components/overlap-tool-wrapper";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Card, CardContent } from "@/components/ui/card";
 import { JsonLd } from "@/components/json-ld";
 
@@ -67,9 +68,10 @@ export default function HomePage() {
       {/* Header */}
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <a href="/" className="font-bold text-lg tracking-tight">
+          <Link href="/" className="font-bold text-lg tracking-tight">
             CollabWindow
-          </a>
+          </Link>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -231,9 +233,9 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <div>© {new Date().getFullYear()} CollabWindow. All rights reserved.</div>
           <div className="flex gap-4">
-            <a href="/privacy" className="hover:text-foreground">Privacy</a>
-            <a href="/about" className="hover:text-foreground">About</a>
-            <a href="/contact" className="hover:text-foreground">Contact</a>
+            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link href="/about" className="hover:text-foreground">About</Link>
+            <Link href="/contact" className="hover:text-foreground">Contact</Link>
           </div>
         </div>
       </footer>

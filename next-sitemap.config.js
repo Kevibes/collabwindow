@@ -5,7 +5,31 @@ module.exports = {
   changefreq: "weekly",
   priority: 0.7,
   robotsTxtOptions: {
-    policies: [{ userAgent: "*", allow: "/" }],
+    policies: [
+      // Allow legitimate search engines
+      { userAgent: "Googlebot", allow: "/" },
+      { userAgent: "Bingbot", allow: "/" },
+      { userAgent: "DuckDuckBot", allow: "/" },
+      { userAgent: "Slurp", allow: "/" },
+      { userAgent: "YandexBot", allow: "/" },
+
+      // Block AI training crawlers
+      { userAgent: "GPTBot", disallow: "/" },
+      { userAgent: "ChatGPT-User", disallow: "/" },
+      { userAgent: "Google-Extended", disallow: "/" },
+      { userAgent: "ClaudeBot", disallow: "/" },
+      { userAgent: "CCBot", disallow: "/" },
+      { userAgent: "Bytespider", disallow: "/" },
+      { userAgent: "PerplexityBot", disallow: "/" },
+      { userAgent: "Applebot-Extended", disallow: "/" },
+      { userAgent: "FacebookBot", disallow: "/" },
+      { userAgent: "Diffbot", disallow: "/" },
+      { userAgent: "Omgilibot", disallow: "/" },
+      { userAgent: "Amazonbot", disallow: "/" },
+
+      // Default: allow everything else
+      { userAgent: "*", allow: "/" },
+    ],
   },
   // Pair pages are high-value — boost their priority
   transform: async (config, path) => {

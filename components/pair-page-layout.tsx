@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { OverlapTool } from "./overlap-tool-wrapper";
 import { AdSlot } from "./ad-slot";
 import { JsonLd } from "./json-ld";
+import { ThemeToggle } from "./theme-toggle";
 
 interface RelatedPair {
   pair: string;
@@ -65,18 +67,19 @@ export function PairPageLayout({
       />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <a href="/" className="font-bold text-lg tracking-tight">
+          <Link href="/" className="font-bold text-lg tracking-tight">
             CollabWindow
-          </a>
+          </Link>
           <nav className="hidden sm:flex items-center gap-6 text-sm">
-            <a
+            <Link
               href="/"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Home
-            </a>
+            </Link>
             <span className="text-muted-foreground">{navLabel}</span>
           </nav>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -123,14 +126,14 @@ export function PairPageLayout({
             <h2 className="text-xl font-bold mb-4">Also check</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {relatedPairs.map((item) => (
-                <a
+                <Link
                   key={item.url}
                   href={item.url}
                   className="block p-4 rounded-lg border bg-background hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors"
                 >
                   <span className="font-medium">{item.pair}</span>{" "}
                   <span className="text-muted-foreground text-sm">Meeting Planner →</span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -141,9 +144,9 @@ export function PairPageLayout({
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <div>© {new Date().getFullYear()} CollabWindow. All rights reserved.</div>
           <div className="flex gap-4">
-            <a href="/privacy" className="hover:text-foreground">Privacy</a>
-            <a href="/about" className="hover:text-foreground">About</a>
-            <a href="/contact" className="hover:text-foreground">Contact</a>
+            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link href="/about" className="hover:text-foreground">About</Link>
+            <Link href="/contact" className="hover:text-foreground">Contact</Link>
           </div>
         </div>
       </footer>

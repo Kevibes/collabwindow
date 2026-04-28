@@ -1,3 +1,71 @@
+# Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+
+# DuckDuckBot
+User-agent: DuckDuckBot
+Allow: /
+
+# Slurp
+User-agent: Slurp
+Allow: /
+
+# YandexBot
+User-agent: YandexBot
+Allow: /
+
+# GPTBot
+User-agent: GPTBot
+Disallow: /
+
+# ChatGPT-User
+User-agent: ChatGPT-User
+Disallow: /
+
+# Google-Extended
+User-agent: Google-Extended
+Disallow: /
+
+# ClaudeBot
+User-agent: ClaudeBot
+Disallow: /
+
+# CCBot
+User-agent: CCBot
+Disallow: /
+
+# Bytespider
+User-agent: Bytespider
+Disallow: /
+
+# PerplexityBot
+User-agent: PerplexityBot
+Disallow: /
+
+# Applebot-Extended
+User-agent: Applebot-Extended
+Disallow: /
+
+# FacebookBot
+User-agent: FacebookBot
+Disallow: /
+
+# Diffbot
+User-agent: Diffbot
+Disallow: /
+
+# Omgilibot
+User-agent: Omgilibot
+Disallow: /
+
+# Amazonbot
+User-agent: Amazonbot
+Disallow: /
+
 # *
 User-agent: *
 Allow: /
