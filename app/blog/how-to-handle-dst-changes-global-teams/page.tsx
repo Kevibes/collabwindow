@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "How to Handle DST Changes for Global Teams (2026 Guide)",
@@ -9,6 +11,16 @@ export const metadata: Metadata = {
 export default function DstGuidePage() {
   return (
     <div className="min-h-full">
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: "How to Handle DST Changes for Global Teams",
+        datePublished: "2026-04-27",
+        dateModified: "2026-04-27",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        url: "https://collabwindow.app/blog/how-to-handle-dst-changes-global-teams",
+      }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -53,7 +65,11 @@ export default function DstGuidePage() {
                 <li><strong>Relying on mental math.</strong> "We are 5 hours apart" is not a stable fact. It is 5 hours in winter and 6 hours in summer, depending on the pair.</li>
                 <li><strong>Not updating recurring meetings.</strong> A quarterly review of recurring meetings takes 10 minutes and prevents weeks of confusion.</li>
               </ul>
+            </div>
 
+            <AdSlot slot="3333333333" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>How DST Affects Common Country Pairs</h2>
 
               <h3>US–India</h3>
@@ -122,7 +138,11 @@ export default function DstGuidePage() {
               <p>
                 When two countries switch on different dates, there is a brief window where the gap is off by an hour. During these periods, avoid scheduling important meetings. If you must meet, double-check the time with both sides and send a confirmation message the day before.
               </p>
+            </div>
 
+            <AdSlot slot="4444444444" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>The Future of DST</h2>
               <p>
                 DST is under pressure. The US Senate passed the Sunshine Protection Act in 2022, which would make DST permanent nationwide. The EU voted to abolish mandatory DST in 2019, though implementation has been delayed. Australia has debated ending DST for years.
@@ -140,6 +160,8 @@ export default function DstGuidePage() {
                 <li><a href="/blog/best-tools-remote-team-meetings">Best Tools for Remote Team Meetings</a></li>
               </ul>
             </div>
+
+            <AdSlot slot="5555555555" format="horizontal" className="mt-8" />
           </div>
         </article>
       </main>

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "Best Tools for Remote Team Meetings in 2026",
@@ -9,6 +11,16 @@ export const metadata: Metadata = {
 export default function BestToolsPage() {
   return (
     <div className="min-h-full">
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: "Best Tools for Remote Team Meetings",
+        datePublished: "2026-04-27",
+        dateModified: "2026-04-27",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        url: "https://collabwindow.app/blog/best-tools-remote-team-meetings",
+      }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -59,7 +71,11 @@ export default function BestToolsPage() {
                 <li><strong>ScreenPal (formerly Screencast-O-Matic)</strong> — A solid Loom alternative with a one-time purchase option. Good for teams that prefer perpetual licenses over subscriptions.</li>
                 <li><strong>Clipchamp</strong> — Microsoft's free video editor with screen recording built in. Best for Windows teams already in the Microsoft ecosystem.</li>
               </ul>
+            </div>
 
+            <AdSlot slot="3333333333" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>4. Shared Docs and Wikis</h2>
               <p>
                 Every distributed team needs a single source of truth for decisions, processes, and context. Shared docs and wikis replace the "I thought we agreed on..." conversations with written records.
@@ -79,7 +95,11 @@ export default function BestToolsPage() {
                 <li><strong>Google Meet</strong> — The simplest option for teams in Google Workspace. One-click joining, live captions, and automatic recording.</li>
                 <li><strong>Microsoft Teams</strong> — Best for teams in the Microsoft ecosystem. Deep integration with Outlook, OneDrive, and SharePoint.</li>
               </ul>
+            </div>
 
+            <AdSlot slot="4444444444" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>6. Team Chat</h2>
               <p>
                 Async communication happens in chat. The right chat tool reduces the need for real-time meetings by 50% or more. Look for threaded conversations, time zone displays, and search.
@@ -125,6 +145,8 @@ export default function BestToolsPage() {
                 <li><a href="/blog/how-to-handle-dst-changes-global-teams">How to Handle DST Changes for Global Teams</a></li>
               </ul>
             </div>
+
+            <AdSlot slot="5555555555" format="horizontal" className="mt-8" />
           </div>
         </article>
       </main>

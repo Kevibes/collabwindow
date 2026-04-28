@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { OverlapTool } from "@/components/overlap-tool-wrapper";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "Best Time to Meet Between UK and Australia | Free Overlap Planner",
@@ -10,6 +12,27 @@ export const metadata: Metadata = {
 export default function UkAustraliaPage() {
   return (
     <div className="min-h-full">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "CollabWindow", item: "https://collabwindow.app" },
+              { "@type": "ListItem", position: 2, name: "UK–Australia Meeting Planner", item: "https://collabwindow.app/uk-australia-meeting-planner" },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "CollabWindow — UK–Australia Time Zone Overlap Planner",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            description: "Free time zone overlap planner for UK and Australia distributed teams.",
+          },
+        ]}
+      />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -36,8 +59,15 @@ export default function UkAustraliaPage() {
           </div>
         </section>
 
+        <div className="px-4 sm:px-6 py-2">
+          <div className="max-w-5xl mx-auto">
+            <AdSlot slot="1111111111" format="horizontal" />
+          </div>
+        </div>
+
         <section className="py-10 px-4 sm:px-6 border-t">
-          <div className="max-w-3xl mx-auto space-y-10">
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-10">
+            <div className="flex-1 min-w-0">
             <article className="prose prose-slate dark:prose-invert max-w-none">
               <h2 className="text-2xl font-bold">Why UK–Australia Meetings Are Tricky</h2>
               <p className="text-muted-foreground">
@@ -71,6 +101,12 @@ export default function UkAustraliaPage() {
                 This creates two brief misalignment windows each year: one in late March/early April and one in October. During these windows, the gap may be an hour off from what you expect. Our planner tracks both DST schedules and warns you when the overlap window shifts.
               </p>
             </article>
+            </div>
+            <aside className="hidden lg:block w-72 shrink-0">
+              <div className="sticky top-6">
+                <AdSlot slot="2222222222" format="vertical" className="min-h-[600px]" />
+              </div>
+            </aside>
           </div>
         </section>
 

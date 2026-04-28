@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "US–India Team Meeting Etiquette: 7 Rules for Distributed Teams",
@@ -9,6 +11,16 @@ export const metadata: Metadata = {
 export default function UsIndiaEtiquettePage() {
   return (
     <div className="min-h-full">
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: "US–India Team Meeting Etiquette: 7 Rules",
+        datePublished: "2026-04-27",
+        dateModified: "2026-04-27",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        url: "https://collabwindow.app/blog/us-india-team-meeting-etiquette",
+      }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -55,7 +67,11 @@ export default function UsIndiaEtiquettePage() {
               <p>
                 Start on time, end on time. This is non-negotiable for distributed teams. A meeting that runs 10 minutes late is 10 minutes of personal time lost for someone who is already at the edge of their day.
               </p>
+            </div>
 
+            <AdSlot slot="3333333333" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>4. Be DST-Aware</h2>
               <p>
                 India does not observe Daylight Saving Time, but the US does. Twice a year, the time gap shifts by one hour. In March, your 8 AM EST meeting jumps from 6:30 PM IST to 7:30 PM IST. In November, it jumps back.
@@ -74,7 +90,11 @@ export default function UsIndiaEtiquettePage() {
               <p>
                 Share the recording within 24 hours, along with a written summary. The summary should be scannable: bullet points for decisions, action items with owners and deadlines, and links to relevant docs. Someone who missed the meeting should catch up in 2 minutes.
               </p>
+            </div>
 
+            <AdSlot slot="4444444444" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>6. Respect Indian Holidays</h2>
               <p>
                 India has a rich calendar of festivals and holidays that shut down offices for days. Diwali, Holi, Independence Day (August 15), Republic Day (January 26), and Ganesh Chaturthi are major events. Plan sprints and milestones around them.
@@ -100,6 +120,8 @@ export default function UsIndiaEtiquettePage() {
                 <li><a href="/blog/how-to-handle-dst-changes-global-teams">How to Handle DST Changes for Global Teams</a></li>
               </ul>
             </div>
+
+            <AdSlot slot="5555555555" format="horizontal" className="mt-8" />
           </div>
         </article>
       </main>

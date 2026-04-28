@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { OverlapTool } from "@/components/overlap-tool-wrapper";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "Best Time to Meet Between UK and India | Free Overlap Planner",
@@ -10,6 +12,27 @@ export const metadata: Metadata = {
 export default function UkIndiaPage() {
   return (
     <div className="min-h-full">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "CollabWindow", item: "https://collabwindow.app" },
+              { "@type": "ListItem", position: 2, name: "UK–India Meeting Planner", item: "https://collabwindow.app/uk-india-meeting-planner" },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "CollabWindow — UK–India Time Zone Overlap Planner",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "Web",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            description: "Free time zone overlap planner for UK and India distributed teams.",
+          },
+        ]}
+      />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -36,8 +59,15 @@ export default function UkIndiaPage() {
           </div>
         </section>
 
+        <div className="px-4 sm:px-6 py-2">
+          <div className="max-w-5xl mx-auto">
+            <AdSlot slot="1111111111" format="horizontal" />
+          </div>
+        </div>
+
         <section className="py-10 px-4 sm:px-6 border-t">
-          <div className="max-w-3xl mx-auto space-y-10">
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-10">
+            <div className="flex-1 min-w-0">
             <article className="prose prose-slate dark:prose-invert max-w-none">
               <h2 className="text-2xl font-bold">Why UK–India Meetings Are Tricky</h2>
               <p className="text-muted-foreground">
@@ -71,6 +101,12 @@ export default function UkIndiaPage() {
                 A 9 AM GMT meeting is 2:30 PM IST. In summer, 9 AM BST is 1:30 PM IST — an hour earlier for the India side. Our planner detects these transitions and warns you when the overlap window is about to shift.
               </p>
             </article>
+            </div>
+            <aside className="hidden lg:block w-72 shrink-0">
+              <div className="sticky top-6">
+                <AdSlot slot="2222222222" format="vertical" className="min-h-[600px]" />
+              </div>
+            </aside>
           </div>
         </section>
 

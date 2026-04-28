@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSlot } from "@/components/ad-slot";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "The Complete Guide to Scheduling Meetings Across Time Zones (2026)",
@@ -10,6 +12,16 @@ export const metadata: Metadata = {
 export default function CompleteGuidePage() {
   return (
     <div className="min-h-full">
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: "The Complete Guide to Scheduling Meetings Across Time Zones",
+        datePublished: "2026-04-27",
+        dateModified: "2026-04-27",
+        author: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        publisher: { "@type": "Organization", name: "CollabWindow", url: "https://collabwindow.app" },
+        url: "https://collabwindow.app/blog/complete-guide-scheduling-meetings-across-time-zones",
+      }} />
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a href="/" className="font-bold text-lg tracking-tight">CollabWindow</a>
@@ -68,7 +80,11 @@ export default function CompleteGuidePage() {
               <p>
                 For more detail, see our guide on <a href="/blog/how-to-handle-dst-changes-global-teams">how to handle DST changes for global teams</a>.
               </p>
+            </div>
 
+            <AdSlot slot="3333333333" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>4. Rotate the Pain</h2>
               <p>
                 If your overlap window is narrow, someone is always meeting at the edge of their day. Do not let that burden fall on the same people every time. Rotate who takes the early or late shift.
@@ -109,7 +125,11 @@ export default function CompleteGuidePage() {
               <p>
                 Share the recording within 24 hours, along with a written summary of decisions and action items. Assign owners and deadlines. The summary should be scannable — bullet points, not paragraphs. Someone who missed the meeting should be able to catch up in 2 minutes.
               </p>
+            </div>
 
+            <AdSlot slot="4444444444" format="horizontal" className="my-8" />
+
+            <div className="prose prose-slate dark:prose-invert max-w-none">
               <h2>8. Respect Local Holidays</h2>
               <p>
                 Nothing kills morale like scheduling a meeting on Diwali, Thanksgiving, or Golden Week. Every country has holidays that shut down business for a day or a week. Know them, respect them, and plan around them.
@@ -156,6 +176,8 @@ export default function CompleteGuidePage() {
                 <li><a href="/blog/best-tools-remote-team-meetings">Best Tools for Remote Team Meetings</a></li>
               </ul>
             </div>
+
+            <AdSlot slot="5555555555" format="horizontal" className="mt-8" />
           </div>
         </article>
       </main>

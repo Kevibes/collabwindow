@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { OverlapTool } from "@/components/overlap-tool-wrapper";
 import { Card, CardContent } from "@/components/ui/card";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "CollabWindow — Find the Best Time to Meet Across Time Zones",
@@ -49,9 +50,20 @@ const faqs = [
   },
 ];
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
 export default function HomePage() {
   return (
     <div className="min-h-full">
+      <JsonLd data={faqSchema} />
       {/* Header */}
       <header className="border-b bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
