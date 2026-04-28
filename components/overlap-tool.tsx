@@ -25,9 +25,6 @@ import {
   Copy,
   Share2,
   AlertTriangle,
-  Plus,
-  X,
-  ChevronDown,
 } from "lucide-react";
 import { formatInTimeZone } from "date-fns-tz";
 import {
@@ -39,7 +36,6 @@ import {
   useOverlap,
   isDstTransitionNearby,
   formatHour,
-  OverlapWindow,
   calculateOverlap,
   getCurrentOffsetLabel,
 } from "@/lib/overlap";
@@ -91,10 +87,6 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
   const [meetingLength, setMeetingLength] = useState(
     parseInt(searchParams.get("len") || "60", 10)
   );
-  const [showThird, setShowThird] = useState(false);
-  const [timeZoneC, setTimeZoneC] = useState("Europe/London");
-  const [startWorkC, setStartWorkC] = useState(9);
-  const [endWorkC, setEndWorkC] = useState(17);
   const [copied, setCopied] = useState(false);
 
   // Update URL when state changes
@@ -348,77 +340,7 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
             </div>
           </div>
 
-          {/* Add Third Zone */}
-          {!showThird && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowThird(true)}
-              className="text-muted-foreground"
-            >
-              <Plus className="h-4 w-4 mr-1" /> Add a third time zone
-            </Button>
-          )}
-
-          {showThird && (
-            <div className="space-y-3 pt-4 border-t">
-              <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold">
-                  Add a third time zone
-                </Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowThird(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <Select
-                value={timeZoneC}
-                onValueChange={(v) => v && setTimeZoneC(v)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {regions.map((region) => (
-                    <SelectGroup key={region}>
-                      <SelectLabel>{region}</SelectLabel>
-                      {timeZones
-                        .filter((tz) => tz.region === region)
-                        .map((tz) => (
-                          <SelectItem key={tz.value} value={tz.value}>
-                            {tz.flag} {tz.city} — {tz.label}
-                          </SelectItem>
-                        ))}
-                    </SelectGroup>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Working hours</span>
-                  <span className="font-medium">
-                    {formatHour(startWorkC)} – {formatHour(endWorkC)}
-                  </span>
-                </div>
-                <Slider
-                  value={[startWorkC, endWorkC]}
-                  onValueChange={(v) => {
-                    const arr = Array.isArray(v) ? v : [v];
-                    if (arr.length >= 2) {
-                      setStartWorkC(arr[0]);
-                      setEndWorkC(arr[1]);
-                    }
-                  }}
-                  min={0}
-                  max={24}
-                  step={1}
-                />
-              </div>
-            </div>
-          )}
+          {/* Third timezone feature removed — not yet implemented */}
         </CardContent>
       </Card>
 
