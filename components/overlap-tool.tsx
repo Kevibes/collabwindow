@@ -44,6 +44,7 @@ import {
   getCurrentOffsetLabel,
 } from "@/lib/overlap";
 import { OverlapBar } from "./overlap-bar";
+import { ExportButtons } from "./export-buttons";
 
 interface OverlapToolProps {
   defaultA?: string;
@@ -157,7 +158,8 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
 
   const dateStr = formatInTimeZone(date, timeZoneA, "yyyy-MM-dd");
 
-  const copyLink = async () => {
+  const shareUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
     const params = new URLSearchParams();
     params.set("a", timeZoneA);
     params.set("b", timeZoneB);
@@ -167,8 +169,11 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
     params.set("eb", String(endWorkB));
     params.set("d", dateStr);
     params.set("len", String(meetingLength));
-    const url = `${window.location.origin}${pathname}?${params.toString()}`;
-    await navigator.clipboard.writeText(url);
+    return `${window.location.origin}${pathname}?${params.toString()}`;
+  }, [timeZoneA, timeZoneB, startWorkA, endWorkA, startWorkB, endWorkB, dateStr, meetingLength, pathname]);
+
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -510,6 +515,20 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
           </div>
         </CardContent>
       </Card>
+
+      {/* Export Buttons */}
+      {bestWindow && (
+        <ExportButtons
+          overlapWindow={bestWindow}
+          date={date}
+          timeZoneA={timeZoneA}
+          timeZoneB={timeZoneB}
+          cityA={tzA?.city ?? "Zone A"}
+          cityB={tzB?.city ?? "Zone B"}
+          meetingLengthMinutes={meetingLength}
+          shareUrl={shareUrl}
+        />
+      )}
 
       {/* Quick Reference Table */}
       {showContent && (
