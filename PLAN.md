@@ -42,6 +42,19 @@
 - ✅ **Updated canonical URLs:** All JSON-LD schema, breadcrumb, and sitemap URLs now use `www.collabwindow.app`
 - ✅ **Created launch kit:** Product Hunt copy, Reddit/LinkedIn/Twitter post drafts, AdSense application checklist
 
+**Completed (2026-04-28 session — code review hardening):**
+- ✅ **Error boundary around OverlapTool:** Added `react-error-boundary` with fallback UI in `components/overlap-tool-wrapper.tsx`
+- ✅ **Unit tests:** Added Vitest + jsdom. 22 tests covering `lib/overlap.ts` (overlap, comfort, DST, UTC) and `lib/calendar-links.ts` (URLs, ICS, Slack)
+- ✅ **Accessibility fix:** Added `role="img"`, `aria-label`, sr-only summary, and pattern fills (stripes/dots) to overlap bar
+- ✅ **Consistent `<Link>` usage:** Replaced plain `<a>` with Next.js `<Link>` in `PairPageLayout` and footer for client-side navigation
+- ✅ **Fixed useEffect deps warning:** Added `eslint-disable-next-line react-hooks/exhaustive-deps` with explanatory comment
+- ✅ **Dark mode toggle:** Added theme provider with `localStorage` persistence and toggle button in headers
+- ✅ **Documented comfort thresholds:** Added code comment explaining 9 AM / 6 PM thresholds in `lib/overlap.ts`
+- ✅ **Anti-AI scraping hardening:**
+  - Updated `robots.txt` to block 12 known AI crawlers (GPTBot, ClaudeBot, etc.)
+  - Created `proxy.ts` (Next.js 16 convention) with `X-Robots-Tag: noai, noimageai` and 403 for AI bot UAs
+  - Created `/terms` page with anti-scraping and anti-AI-training clauses
+
 **Next Session (Priority):**
 Ready for promotion and monetization:
 1.  Submit to Google Search Console (verify `www.collabwindow.app`)
