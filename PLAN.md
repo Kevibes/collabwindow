@@ -37,13 +37,20 @@
 - ✅ **Fixed date display to be timezone-aware** (uses `formatInTimeZone` instead of `toLocaleDateString`)
 - ✅ **Extracted shared `PairPageLayout` component** (eliminated ~1,470 lines of duplicated boilerplate across 10 pair pages)
 
+**Completed (2026-04-28 session — continued):**
+- ✅ **Deployed custom domain:** `collabwindow.app` → `www.collabwindow.app` (Vercel 308 redirect, Cloudflare DNS)
+- ✅ **Updated canonical URLs:** All JSON-LD schema, breadcrumb, and sitemap URLs now use `www.collabwindow.app`
+- ✅ **Created launch kit:** Product Hunt copy, Reddit/LinkedIn/Twitter post drafts, AdSense application checklist
+
 **Next Session (Priority):**
-Ready for custom domain deployment. Remaining items are promotion and content:
-1.  Deploy `collabwindow.app` custom domain on Vercel
+Ready for promotion and monetization:
+1.  Submit to Google Search Console (verify `www.collabwindow.app`)
 2.  Apply for Google AdSense (requires `NEXT_PUBLIC_ADSENSE_ID` env var)
-3.  Product Hunt launch preparation
-4.  Reddit/LinkedIn promotion
-5.  Monitor Search Console for ranking keywords
+3.  Launch on Product Hunt
+4.  Post to Reddit (r/remotework, r/digitalnomad, r/SideProject)
+5.  Post to LinkedIn and Twitter/X
+6.  Submit "Show HN" to Hacker News
+7.  Monitor Search Console weekly for ranking keywords
 
 ---
 
