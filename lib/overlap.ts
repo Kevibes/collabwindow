@@ -140,12 +140,8 @@ export function calculateOverlap(
       } else {
         currentWindow.endHour = slot.hour + 1;
         currentWindow.durationHours++;
-        if (slot.comfort === "good" && currentWindow.comfort !== "good") {
-          currentWindow.comfort = "good";
-        } else if (
-          slot.comfort === "borderline" &&
-          currentWindow.comfort === "bad"
-        ) {
+        // Window comfort = worst comfort of any slot in the window
+        if (slot.comfort === "borderline" && currentWindow.comfort === "good") {
           currentWindow.comfort = "borderline";
         }
       }
