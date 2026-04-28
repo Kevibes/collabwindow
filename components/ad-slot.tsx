@@ -27,7 +27,9 @@ export function AdSlot({ slot, format = "auto", className = "" }: AdSlotProps) {
     }
   }, []);
 
-  if (process.env.NODE_ENV !== "production") {
+  const publisherId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+
+  if (!publisherId) {
     return (
       <div
         className={`border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-xs text-slate-400 min-h-[90px] ${className}`}
@@ -40,8 +42,7 @@ export function AdSlot({ slot, format = "auto", className = "" }: AdSlotProps) {
   return (
     <ins
       className={`adsbygoogle block ${className}`}
-      // TODO: replace with your publisher ID from Google AdSense dashboard
-      data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+      data-ad-client={publisherId}
       data-ad-slot={slot}
       data-ad-format={format}
       data-full-width-responsive="true"
