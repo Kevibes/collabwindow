@@ -66,8 +66,12 @@ export function ExportButtons({
       const hour   = Math.floor(h);
       const minute = h % 1 >= 0.5 ? 30 : 0;
 
-      const localDate = new Date(Date.UTC(y, mo, d, hour, minute, 0));
-      const utc       = fromZonedTime(localDate, timeZoneA);
+      const mo1 = mo + 1;
+      const dateStr = `${y}-${String(mo1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const utc = fromZonedTime(
+        `${dateStr}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00`,
+        timeZoneA
+      );
 
       result.push({
         key:    `${hour}-${minute}`,

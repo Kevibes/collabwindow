@@ -476,3 +476,588 @@ Launch supporting articles alongside pair pages:
 | Ad revenue underwhelming | Low | Medium | B2B CPMs are proven. If low, expand content pages or add premium tier. |
 | Competitor copies tool | Medium | Low | Copying the tool is easy. Copying the content moat and 10 dedicated pair pages is not. |
 | Core Web Vitals failure | Low | High | Monitor LCP/CLS from day one. SVG overlap bar is lightweight. |
+
+---
+
+## Feature: Export to Calendar & Collaboration Apps
+
+> **For agentic workers:** Use `superpowers:subagent-driven-development` or `superpowers:executing-plans` to implement task-by-task.
+
+**Goal:** Let users pick a specific time from the overlap window and send it directly to Google Calendar, Outlook, Apple Calendar (.ics file), Microsoft Teams, Zoom, or copy a pre-formatted Slack message — all without OAuth or API keys.
+
+**Architecture:** A pure utility module (`lib/calendar-links.ts`) generates all URLs and ICS content from a `MeetingDetails` object. A new client component (`components/export-buttons.tsx`) renders below the overlap result with a time-slot picker, title input, and export buttons. The existing `overlap-tool.tsx` passes the best window and timezone context down as props.
+
+**Tech stack:** TypeScript, `date-fns-tz` (already installed), Blob URL API for ICS download, shadcn/ui Button + Select + Label (already installed).
+
+**Key pattern from `lib/overlap.ts` — use this exactly for UTC conversion:**
+```typescript
+// "7:30 AM in America/New_York" → UTC
+const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
+const utcDate = fromZonedTime(localDate, timeZoneA);
+```
+
+---
+
+### File Map
+
+| File | Status | Responsibility |
+|---|---|---|
+| `lib/calendar-links.ts` | **Create** | Pure functions: UTC helpers, Google/Outlook/Teams URL builders, ICS generator, Slack formatter |
+| `components/export-buttons.tsx` | **Create** | Client component: time-slot picker, title input, all export buttons |
+| `components/overlap-tool.tsx` | **Modify** | Import and render `<ExportButtons>` below the results card, pass shareUrl |
+
+---
+
+### Task 1 — Create `lib/calendar-links.ts`
+
+**Files:**
+- Create: `lib/calendar-links.ts`
+
+- [ ] **Step 1.1 — Write the full file**
+
+```typescript
+// lib/calendar-links.ts
+import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
+
+export interface MeetingDetails {
+  title: string;
+  /** UTC date for the day — same shape as `date` in overlap-tool: Date.UTC(y, m-1, d) */
+  dayUtc: Date;
+  /** Local start hour in Zone A (integer 0–23) */
+  startHourA: number;
+  /** Local start minute in Zone A (0 or 30) */
+  startMinuteA: number;
+  /** Duration in minutes (e.g. 30, 60, 90, 120) */
+  durationMinutes: number;
+  timeZoneA: string;
+  timeZoneB: string;
+  cityA: string;
+  cityB: string;
+  /** Full CollabWindow URL with current query params */
+  shareUrl: string;
+}
+
+/** Convert local Zone-A time on the given day to UTC.
+ *  Uses the same pattern as lib/overlap.ts to stay consistent. */
+export function toStartUtc(m: MeetingDetails): Date {
+  const y  = m.dayUtc.getUTCFullYear();
+  const mo = m.dayUtc.getUTCMonth();     // 0-indexed
+  const d  = m.dayUtc.getUTCDate();
+  const localDate = new Date(Date.UTC(y, mo, d, m.startHourA, m.startMinuteA, 0));
+  return fromZonedTime(localDate, m.timeZoneA);
+}
+
+export function toEndUtc(m: MeetingDetails): Date {
+  return new Date(toStartUtc(m).getTime() + m.durationMinutes * 60_000);
+}
+
+/** Format a UTC Date as ICS timestamp: 20260428T110000Z */
+function icsStamp(d: Date): string {
+  return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+}
+
+function description(m: MeetingDetails): string {
+  const start = toStartUtc(m);
+  const end   = toEndUtc(m);
+  const fmtA  = (d: Date) => formatInTimeZone(d, m.timeZoneA, "h:mm a zzz");
+  const fmtB  = (d: Date) => formatInTimeZone(d, m.timeZoneB, "h:mm a zzz");
+  return (
+    `${m.cityA}: ${fmtA(start)} – ${fmtA(end)}\n` +
+    `${m.cityB}: ${fmtB(start)} – ${fmtB(end)}\n\n` +
+    `Scheduled via CollabWindow: ${m.shareUrl}`
+  );
+}
+
+export function googleCalendarUrl(m: MeetingDetails): string {
+  const p = new URLSearchParams({
+    action: "TEMPLATE",
+    text:    m.title,
+    dates:  `${icsStamp(toStartUtc(m))}/${icsStamp(toEndUtc(m))}`,
+    details: description(m),
+  });
+  return `https://calendar.google.com/calendar/render?${p}`;
+}
+
+export function outlookUrl(m: MeetingDetails): string {
+  const p = new URLSearchParams({
+    subject:  m.title,
+    startdt:  toStartUtc(m).toISOString(),
+    enddt:    toEndUtc(m).toISOString(),
+    body:     description(m),
+  });
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${p}`;
+}
+
+export function teamsUrl(m: MeetingDetails): string {
+  const p = new URLSearchParams({
+    subject:   m.title,
+    startTime: toStartUtc(m).toISOString(),
+    endTime:   toEndUtc(m).toISOString(),
+    content:   description(m),
+  });
+  return `https://teams.microsoft.com/l/meeting/new?${p}`;
+}
+
+export function icsContent(m: MeetingDetails): string {
+  const uid  = `collabwindow-${Date.now()}@collabwindow.app`;
+  const now  = icsStamp(new Date());
+  const desc = description(m).replace(/\n/g, "\\n");
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//CollabWindow//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART:${icsStamp(toStartUtc(m))}`,
+    `DTEND:${icsStamp(toEndUtc(m))}`,
+    `SUMMARY:${m.title}`,
+    `DESCRIPTION:${desc}`,
+    `URL:${m.shareUrl}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
+export function triggerIcsDownload(m: MeetingDetails): void {
+  const blob = new Blob([icsContent(m)], { type: "text/calendar;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `${m.title.replace(/\s+/g, "-").toLowerCase()}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+export function slackMessage(m: MeetingDetails): string {
+  const start  = toStartUtc(m);
+  const end    = toEndUtc(m);
+  const fmtA   = (d: Date) => formatInTimeZone(d, m.timeZoneA, "h:mm a zzz");
+  const fmtB   = (d: Date) => formatInTimeZone(d, m.timeZoneB, "h:mm a zzz");
+  const dayStr = formatInTimeZone(start, m.timeZoneA, "EEEE, d MMM yyyy");
+  return (
+    `📅 *${m.title}*\n` +
+    `🕐 ${dayStr}\n` +
+    `${m.cityA}: ${fmtA(start)} – ${fmtA(end)}\n` +
+    `${m.cityB}: ${fmtB(start)} – ${fmtB(end)}\n` +
+    `🔗 ${m.shareUrl}`
+  );
+}
+```
+
+- [ ] **Step 1.2 — Type-check**
+
+```bash
+cd "/home/kevin/Projects/Making Money/time-zone-meeting-planner" && npx tsc --noEmit
+```
+
+Expected: zero errors.
+
+- [ ] **Step 1.3 — Smoke-test the outputs**
+
+Create `lib/_cal-smoke.mjs` (delete after):
+```javascript
+// Run with: node --experimental-vm-modules lib/_cal-smoke.mjs
+// (or: npx tsx lib/_cal-smoke.ts if tsx available)
+import { toStartUtc, toEndUtc, googleCalendarUrl, outlookUrl, teamsUrl, slackMessage, icsContent } from "./calendar-links.ts";
+
+const m = {
+  title: "Team Sync",
+  dayUtc: new Date(Date.UTC(2026, 3, 28)), // April 28 2026
+  startHourA: 9, startMinuteA: 0,
+  durationMinutes: 60,
+  timeZoneA: "America/New_York",
+  timeZoneB: "Asia/Kolkata",
+  cityA: "New York", cityB: "Mumbai",
+  shareUrl: "https://collabwindow.app/us-india-meeting-planner",
+};
+
+console.log("startUtc:", toStartUtc(m).toISOString());  // expect 2026-04-28T13:00:00.000Z (9AM EDT = UTC-4)
+console.log("endUtc:  ", toEndUtc(m).toISOString());    // expect 2026-04-28T14:00:00.000Z
+console.log("\nGoogle:\n", googleCalendarUrl(m));
+console.log("\nOutlook:\n", outlookUrl(m));
+console.log("\nTeams:\n", teamsUrl(m));
+console.log("\nSlack:\n", slackMessage(m));
+console.log("\nICS:\n", icsContent(m));
+```
+
+Run: `npx tsx lib/_cal-smoke.mjs`
+
+Verify:
+- `startUtc` = `2026-04-28T13:00:00.000Z` (9 AM EDT)
+- Google URL contains `dates=20260428T130000Z%2F20260428T140000Z`
+- Slack shows `New York: 9:00 AM EDT – 10:00 AM EDT` and `Mumbai: 6:30 PM IST – 7:30 PM IST`
+- ICS contains `DTSTART:20260428T130000Z`
+
+Delete the smoke file after verification.
+
+- [ ] **Step 1.4 — Commit**
+
+```bash
+git add lib/calendar-links.ts
+git commit -m "feat: add calendar-links utility (Google, Outlook, Teams, ICS, Slack)"
+```
+
+---
+
+### Task 2 — Create `components/export-buttons.tsx`
+
+**Files:**
+- Create: `components/export-buttons.tsx`
+
+- [ ] **Step 2.1 — Write the component**
+
+```tsx
+"use client";
+
+import { useState, useMemo } from "react";
+import { fromZonedTime, formatInTimeZone } from "date-fns-tz";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Copy, Download, ExternalLink } from "lucide-react";
+import {
+  type MeetingDetails,
+  googleCalendarUrl,
+  outlookUrl,
+  teamsUrl,
+  triggerIcsDownload,
+  slackMessage,
+} from "@/lib/calendar-links";
+import type { OverlapWindow } from "@/lib/overlap";
+
+interface ExportButtonsProps {
+  overlapWindow: OverlapWindow;
+  date: Date;               // same Date object used throughout overlap-tool
+  timeZoneA: string;
+  timeZoneB: string;
+  cityA: string;            // e.g. "New York"
+  cityB: string;            // e.g. "Mumbai"
+  meetingLengthMinutes: number;
+  shareUrl: string;         // current window.location.href
+}
+
+interface Slot {
+  key: string;
+  hour: number;
+  minute: number;
+  labelA: string;
+  labelB: string;
+}
+
+export function ExportButtons({
+  overlapWindow,
+  date,
+  timeZoneA,
+  timeZoneB,
+  cityA,
+  cityB,
+  meetingLengthMinutes,
+  shareUrl,
+}: ExportButtonsProps) {
+  const [title, setTitle] = useState("Team Meeting");
+  const [slotKey, setSlotKey] = useState<string>("");
+  const [slackCopied, setSlackCopied] = useState(false);
+
+  // Build 30-min slots within the overlap window that fit the meeting duration
+  const slots: Slot[] = useMemo(() => {
+    const result: Slot[] = [];
+    const y  = date.getUTCFullYear();
+    const mo = date.getUTCMonth();
+    const d  = date.getUTCDate();
+    const maxStartHour = overlapWindow.endHour - meetingLengthMinutes / 60;
+
+    for (let h = overlapWindow.startHour; h <= maxStartHour; h += 0.5) {
+      const hour   = Math.floor(h);
+      const minute = h % 1 >= 0.5 ? 30 : 0;
+
+      // Same fromZonedTime pattern as lib/overlap.ts
+      const localDate = new Date(Date.UTC(y, mo, d, hour, minute, 0));
+      const utc       = fromZonedTime(localDate, timeZoneA);
+
+      result.push({
+        key:    `${hour}-${minute}`,
+        hour,
+        minute,
+        labelA: formatInTimeZone(utc, timeZoneA, "h:mm a"),
+        labelB: formatInTimeZone(utc, timeZoneB, "h:mm a"),
+      });
+    }
+    return result;
+  }, [overlapWindow, date, timeZoneA, timeZoneB, meetingLengthMinutes]);
+
+  if (slots.length === 0) return null;
+
+  const activeSlot = slots.find((s) => s.key === slotKey) ?? slots[0];
+
+  const meeting: MeetingDetails = {
+    title,
+    dayUtc: date,
+    startHourA:     activeSlot.hour,
+    startMinuteA:   activeSlot.minute,
+    durationMinutes: meetingLengthMinutes,
+    timeZoneA,
+    timeZoneB,
+    cityA,
+    cityB,
+    shareUrl,
+  };
+
+  const copySlack = async () => {
+    await navigator.clipboard.writeText(slackMessage(meeting));
+    setSlackCopied(true);
+    setTimeout(() => setSlackCopied(false), 2000);
+  };
+
+  return (
+    <div className="rounded-lg border bg-background p-6 space-y-5">
+      <h3 className="text-base font-semibold">Schedule this meeting</h3>
+
+      {/* Title + time slot row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label>Meeting title</Label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <Label>Start time ({cityA})</Label>
+          <Select
+            value={slotKey || slots[0].key}
+            onValueChange={setSlotKey}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {slots.map((s) => (
+                <SelectItem key={s.key} value={s.key}>
+                  {s.labelA}
+                  <span className="text-muted-foreground ml-2">
+                    / {s.labelB} {cityB}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Calendar exports */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          Add to calendar
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => globalThis.open(googleCalendarUrl(meeting), "_blank")}
+            className="gap-1.5"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Google Calendar
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => globalThis.open(outlookUrl(meeting), "_blank")}
+            className="gap-1.5"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Outlook
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => triggerIcsDownload(meeting)}
+            className="gap-1.5"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Apple / .ics
+          </Button>
+        </div>
+      </div>
+
+      {/* Meeting apps */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          Open meeting app
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => globalThis.open(teamsUrl(meeting), "_blank")}
+            className="gap-1.5"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Microsoft Teams
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => globalThis.open("https://zoom.us/meeting/schedule", "_blank")}
+            className="gap-1.5"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Zoom
+          </Button>
+        </div>
+      </div>
+
+      {/* Slack copy */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          Share with team
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={copySlack}
+          className="gap-1.5"
+        >
+          <Copy className="h-3.5 w-3.5" />
+          {slackCopied ? "Copied!" : "Copy for Slack"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 2.2 — Type-check**
+
+```bash
+npx tsc --noEmit
+```
+
+Expected: zero errors.
+
+- [ ] **Step 2.3 — Commit**
+
+```bash
+git add components/export-buttons.tsx
+git commit -m "feat: add ExportButtons component (calendar, Teams, Zoom, Slack)"
+```
+
+---
+
+### Task 3 — Wire ExportButtons into `overlap-tool.tsx`
+
+**Files:**
+- Modify: `components/overlap-tool.tsx`
+
+The component already has `bestWindow`, `date`, `timeZoneA`, `timeZoneB`, `meetingLength`, `tzA`, `tzB`, and the share URL logic. We pass them to `ExportButtons` and render it below the results card.
+
+- [ ] **Step 3.1 — Add import at top of `overlap-tool.tsx`**
+
+After the existing imports, add:
+```typescript
+import { ExportButtons } from "./export-buttons";
+```
+
+- [ ] **Step 3.2 — Build the shareUrl string inside the component**
+
+The existing `copyLink` function already builds the URL. Extract just the URL string into a `useMemo` so `ExportButtons` can use it without duplicating logic. Find the `copyLink` function in the file and add this memo directly above it:
+
+```typescript
+const shareUrl = useMemo(() => {
+  if (typeof window === "undefined") return "";
+  const params = new URLSearchParams();
+  params.set("a", timeZoneA);
+  params.set("b", timeZoneB);
+  params.set("sa", String(startWorkA));
+  params.set("ea", String(endWorkA));
+  params.set("sb", String(startWorkB));
+  params.set("eb", String(endWorkB));
+  params.set("d", dateStr);
+  params.set("len", String(meetingLength));
+  return `${window.location.origin}${pathname}?${params.toString()}`;
+}, [timeZoneA, timeZoneB, startWorkA, endWorkA, startWorkB, endWorkB, dateStr, meetingLength, pathname]);
+```
+
+- [ ] **Step 3.3 — Render ExportButtons below the results card**
+
+In the JSX, locate the closing `</Card>` of the results card (the one containing "Overlap Result"). Directly after it, add:
+
+```tsx
+{bestWindow && (
+  <ExportButtons
+    overlapWindow={bestWindow}
+    date={date}
+    timeZoneA={timeZoneA}
+    timeZoneB={timeZoneB}
+    cityA={tzA?.city ?? "Zone A"}
+    cityB={tzB?.city ?? "Zone B"}
+    meetingLengthMinutes={meetingLength}
+    shareUrl={shareUrl}
+  />
+)}
+```
+
+- [ ] **Step 3.4 — Type-check and build**
+
+```bash
+npx tsc --noEmit && npm run build
+```
+
+Expected: zero TypeScript errors, clean Next.js build, all 19 routes still static.
+
+- [ ] **Step 3.5 — Manual UI test**
+
+Start the dev server:
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000/us-india-meeting-planner` and verify:
+
+1. **Export section appears** below the "Overlap Result" card when there is a best window.
+2. **Export section is hidden** when there is no overlap (adjust working hours to force no overlap — confirm the section disappears).
+3. **Start time dropdown** shows 30-min slots only within the overlap window. Both timezones shown in each option (e.g. "9:00 AM / 6:30 PM Mumbai").
+4. **Meeting title** defaults to "Team Meeting" and is editable.
+5. **Google Calendar** button opens a new tab with a pre-filled event — verify the dates and title in the URL.
+6. **Outlook** button opens `outlook.live.com/calendar/0/deeplink/compose` with correct params.
+7. **Apple / .ics** button downloads a `.ics` file — open it and verify the event time, title, and description are correct.
+8. **Microsoft Teams** button opens the Teams scheduling page with subject and times.
+9. **Zoom** button opens `zoom.us/meeting/schedule`.
+10. **Copy for Slack** button copies text to clipboard — paste into a text editor and verify format:
+    ```
+    📅 *Team Meeting*
+    🕐 Tuesday, 28 Apr 2026
+    New York: 9:00 AM EDT – 10:00 AM EDT
+    Mumbai: 6:30 PM IST – 7:30 PM IST
+    🔗 https://collabwindow.app/us-india-meeting-planner?...
+    ```
+11. Test on mobile viewport (375px) — buttons wrap correctly, dropdowns usable.
+
+- [ ] **Step 3.6 — Commit**
+
+```bash
+git add components/overlap-tool.tsx
+git commit -m "feat: wire ExportButtons into overlap tool — schedule to Google, Outlook, Apple, Teams, Zoom, Slack"
+```
+
+---
+
+### Post-build checklist
+
+- [ ] Push to GitHub: `git push origin main` — Vercel auto-deploys
+- [ ] Verify on live site that all export buttons work (calendar apps open with correct pre-filled data)
+- [ ] Check that `.ics` download works on iOS Safari (Apple Calendar deep-link behavior differs)

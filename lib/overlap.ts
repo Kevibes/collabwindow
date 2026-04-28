@@ -54,9 +54,8 @@ export function getLocalHourLabel(
   hour: number
 ): string {
   const dateStr = formatInTimeZone(date, timeZone, "yyyy-MM-dd");
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const localDate = new Date(Date.UTC(year, month - 1, day, hour, 0, 0));
-  const utcDate = fromZonedTime(localDate, timeZone);
+  const hh = String(hour).padStart(2, "0");
+  const utcDate = fromZonedTime(`${dateStr}T${hh}:00:00`, timeZone);
 
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -96,8 +95,8 @@ export function calculateOverlap(
   const [year, month, day] = dateStr.split("-").map(Number);
 
   for (let hourA = 0; hourA < 24; hourA++) {
-    const localDate = new Date(Date.UTC(year, month - 1, day, hourA, 0, 0));
-    const utcDate = fromZonedTime(localDate, timeZoneA);
+    const hhA = String(hourA).padStart(2, "0");
+    const utcDate = fromZonedTime(`${dateStr}T${hhA}:00:00`, timeZoneA);
 
     const hourMinuteB = formatInTimeZone(utcDate, timeZoneB, "H:mm");
     const [hourB, minuteB] = hourMinuteB.split(":").map(Number);
@@ -172,17 +171,19 @@ export function calculateOverlap(
     const actualEndHour = win.endHour % 24;
     const endDay = day + (isNextDay ? 1 : 0);
 
-    const startLocalDate = new Date(
-      Date.UTC(year, month - 1, day, win.startHour, 0, 0)
+    const startUtcDate = fromZonedTime(
+      `${dateStr}T${String(win.startHour).padStart(2, "0")}:00:00`,
+      timeZoneA
     );
-    const startUtcDate = fromZonedTime(startLocalDate, timeZoneA);
     const startLabelA = formatInTimeZone(startUtcDate, timeZoneA, "h:mm a");
     const startLabelB = formatInTimeZone(startUtcDate, timeZoneB, "h:mm a");
 
-    const endLocalDate = new Date(
-      Date.UTC(year, month - 1, endDay, actualEndHour, 0, 0)
+    const endDateObj = new Date(Date.UTC(year, month - 1, day + (isNextDay ? 1 : 0)));
+    const endDateStr = `${endDateObj.getUTCFullYear()}-${String(endDateObj.getUTCMonth() + 1).padStart(2, "0")}-${String(endDateObj.getUTCDate()).padStart(2, "0")}`;
+    const endUtcDate = fromZonedTime(
+      `${endDateStr}T${String(actualEndHour).padStart(2, "0")}:00:00`,
+      timeZoneA
     );
-    const endUtcDate = fromZonedTime(endLocalDate, timeZoneA);
     const endLabelA = formatInTimeZone(endUtcDate, timeZoneA, "h:mm a");
     const endLabelB = formatInTimeZone(endUtcDate, timeZoneB, "h:mm a");
 
