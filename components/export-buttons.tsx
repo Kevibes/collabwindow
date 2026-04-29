@@ -129,11 +129,16 @@ export function ExportButtons({
             onValueChange={(v) => { if (v !== null) setSlotKey(v); }}
           >
             <SelectTrigger className="w-full">
-              <SelectValue />
+              <SelectValue>
+                {(value: string | null) => {
+                  const slot = slots.find((s) => s.key === value) ?? slots[0];
+                  return slot?.labelA ?? "";
+                }}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {slots.map((s) => (
-                <SelectItem key={s.key} value={s.key} textValue={`${s.labelA} / ${s.labelB} ${cityB}`}>
+                <SelectItem key={s.key} value={s.key}>
                   {s.labelA}
                   <span className="text-muted-foreground ml-2">
                     / {s.labelB} {cityB}
