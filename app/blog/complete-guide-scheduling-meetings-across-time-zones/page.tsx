@@ -187,6 +187,7 @@ export default function CompleteGuidePage() {
           <div>© {new Date().getFullYear()} CollabWindow. All rights reserved.</div>
           <div className="flex gap-4">
             <a href="/privacy" className="hover:text-foreground">Privacy</a>
+            <a href="/terms" className="hover:text-foreground">Terms</a>
             <a href="/about" className="hover:text-foreground">About</a>
             <a href="/contact" className="hover:text-foreground">Contact</a>
           </div>

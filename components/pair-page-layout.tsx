@@ -145,6 +145,7 @@ export function PairPageLayout({
           <div>© {new Date().getFullYear()} CollabWindow. All rights reserved.</div>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link href="/terms" className="hover:text-foreground">Terms</Link>
             <Link href="/about" className="hover:text-foreground">About</Link>
             <Link href="/contact" className="hover:text-foreground">Contact</Link>
           </div>
