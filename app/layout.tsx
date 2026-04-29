@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "CollabWindow — Find the Best Time to Meet Across Time Zones",
   description:
     "Free overlap planner for distributed teams. Find the perfect meeting time between US, India, UK, and other time zones. No signup required.",
+  other: {
+    "google-adsense-account": "ca-pub-8435762876670314",
+  },
 };
 
 export default function RootLayout({
