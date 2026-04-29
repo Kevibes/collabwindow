@@ -55,14 +55,23 @@
   - Created `proxy.ts` (Next.js 16 convention) with `X-Robots-Tag: noai, noimageai` and 403 for AI bot UAs
   - Created `/terms` page with anti-scraping and anti-AI-training clauses
 
+**Completed (2026-04-29 session — launch infrastructure):**
+- ✅ **Google Search Console:** Ownership verified. Sitemap submitted: `https://www.collabwindow.app/sitemap.xml`
+- ✅ **Google AdSense:** Applied (status: "getting ready"). Meta tag (`ca-pub-8435762876670314`) added to `app/layout.tsx`. Awaiting approval — then set `NEXT_PUBLIC_ADSENSE_ID` in Vercel. Manual ad placement chosen (not auto ads).
+- ✅ **Google CMP:** 3-choice consent configured for EEA/UK/Switzerland visitors.
+- ✅ **Cloudflare email routing:** `hello@collabwindow.app` → `kevin@careplusni.co.uk` (pending verification email click)
+- ✅ **Cloudflare proxying:** Vercel DNS records proxied (orange cloud). SSL Full (strict). MX left DNS-only.
+- ✅ **Domain redirects:** `collabwindow.com` and `collabwindow.co.uk` → `https://www.collabwindow.app` (301, Ionos, path forwarding enabled)
+- ✅ **Footer fix:** Added `/terms` link to all 7 footers (homepage, 5 blog pages, pair-page-layout)
+- ✅ **Sitemap build fix:** `sitemap*.xml` and `robots.txt` removed from git, added to `.gitignore`, regenerated fresh on every Vercel deploy via `postbuild`
+
 **Next Session (Priority):**
-Ready for promotion and monetization:
-1.  Submit to Google Search Console (verify `www.collabwindow.app`)
-2.  Apply for Google AdSense (requires `NEXT_PUBLIC_ADSENSE_ID` env var)
-3.  Launch on Product Hunt
-4.  Post to Reddit (r/remotework, r/digitalnomad, r/SideProject)
-5.  Post to LinkedIn and Twitter/X
-6.  Submit "Show HN" to Hacker News
+1.  Click Cloudflare email routing verification email to activate `hello@collabwindow.app`
+2.  Wait for AdSense approval → set `NEXT_PUBLIC_ADSENSE_ID` in Vercel → add manual ad slots
+3.  Launch on Product Hunt (copy ready in `launch-kit.md`)
+4.  Post to Reddit: r/SideProject, r/remotework, r/digitalnomad (drafts in `launch-kit.md`)
+5.  Submit "Show HN" to Hacker News
+6.  Post to LinkedIn and Twitter/X
 7.  Monitor Search Console weekly for ranking keywords
 
 ---
