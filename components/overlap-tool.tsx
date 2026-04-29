@@ -328,7 +328,7 @@ export function OverlapTool({ defaultA, defaultB, showContent = true }: OverlapT
                   updateUrl({ len: String(len) });
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
