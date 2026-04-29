@@ -133,7 +133,7 @@ export function ExportButtons({
             </SelectTrigger>
             <SelectContent>
               {slots.map((s) => (
-                <SelectItem key={s.key} value={s.key}>
+                <SelectItem key={s.key} value={s.key} textValue={`${s.labelA} / ${s.labelB} ${cityB}`}>
                   {s.labelA}
                   <span className="text-muted-foreground ml-2">
                     / {s.labelB} {cityB}
