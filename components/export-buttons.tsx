@@ -128,7 +128,7 @@ export function ExportButtons({
             value={slotKey || slots[0].key}
             onValueChange={(v) => { if (v !== null) setSlotKey(v); }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
