@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { OverlapTool } from "@/components/overlap-tool-wrapper";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Card, CardContent } from "@/components/ui/card";
 import { JsonLd } from "@/components/json-ld";
+import { getTimeZoneOption } from "@/lib/timezones";
 
 export const metadata: Metadata = {
   title: "CollabWindow — Find the Best Time to Meet Across Time Zones",
@@ -61,7 +63,15 @@ const faqSchema = {
   })),
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const headersList = await headers();
+  const vercelTimezone = headersList.get("x-vercel-ip-timezone");
+  
+  // Validate if the timezone exists in our curated list
+  const detectedTimezone = vercelTimezone && getTimeZoneOption(vercelTimezone) 
+    ? vercelTimezone 
+    : "America/New_York";
+
   return (
     <div className="min-h-full">
       <JsonLd data={faqSchema} />
@@ -109,7 +119,7 @@ export default function HomePage() {
         {/* Tool */}
         <section id="tool" className="py-8 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
-            <OverlapTool showContent={false} />
+            <OverlapTool showContent={false} defaultA={detectedTimezone} />
           </div>
         </section>
 
