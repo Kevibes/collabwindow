@@ -33,25 +33,23 @@ export default function PrivacyPage() {
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">
               <li>We do not ask for your name, email, or any personal details.</li>
               <li>We do not store your meeting times or time zone selections.</li>
-              <li>We do not use cookies for tracking or advertising.</li>
             </ul>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold">Analytics</h2>
             <p className="text-muted-foreground">
-              We use privacy-friendly analytics (Plausible) to understand how
-              people use the site. This data is aggregated and anonymous — we
-              cannot identify individual visitors.
+              We use <strong>Vercel Web Analytics</strong>, which is a privacy-first, cookieless analytics solution to monitor basic site performance and page views. This data is aggregated and anonymous.
+            </p>
+            <p className="text-muted-foreground">
+              If you provide your consent via our cookie banner, we also use <strong>Google Analytics 4</strong> to better understand search traffic and user demographics. Google Analytics uses cookies to track your behavior across the site.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold">Advertising</h2>
             <p className="text-muted-foreground">
-              We may display ads via Google AdSense on some pages. Google may use
-              cookies to serve ads based on your prior visits to this or other
-              websites. You can opt out of personalized advertising by visiting{" "}
+              We may display ads via <strong>Google AdSense</strong>. AdSense uses cookies to serve ads based on your prior visits to this or other websites. We only load personalized advertising scripts if you explicitly accept cookies via our cookie banner. You can opt out of personalized advertising entirely by visiting{" "}
               <a
                 href="https://adssettings.google.com"
                 className="text-indigo-600 dark:text-indigo-400 hover:underline"
@@ -61,6 +59,16 @@ export default function PrivacyPage() {
                 Google Ads Settings
               </a>
               .
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-semibold">EU GDPR & Cookie Policy</h2>
+            <p className="text-muted-foreground">
+              In accordance with EU regulations, we use a consent management banner to give you control over non-essential cookies. You have the right to accept or decline the use of analytics and advertising cookies. 
+            </p>
+            <p className="text-muted-foreground">
+              If you wish to withdraw your consent or change your preferences at any time, you can clear your browser cookies for this site, which will prompt the cookie banner to reappear.
             </p>
           </section>
 
